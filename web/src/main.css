@@ -1,25 +1,16 @@
+/* Brush-style calligraphy font for the Chinese characters (falls back to KaiTi on Windows) */
+@import url("https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap");
+
 /* ---------- Colors ---------- */
 :root {
-    --bg-top: #fff4e0;
-    --bg-bottom: #f6d9a8;
-    --red: #c0392b;
-    --red-dark: #962d22;
-    --gold: #e0a526;
-    --paper: #fffdf7;
-    --ink: #3b2a1a;
-    --shadow: rgba(80, 40, 10, 0.25);
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg-top: #2a1a12;
-        --bg-bottom: #120a06;
-        --paper: #fbf3e2;
-        --shadow: rgba(0, 0, 0, 0.5);
-    }
-    h1 {
-        color: #f4c35a;
-    }
+    --red: #b3121b;
+    --red-deep: #7a0c12;
+    --red-bright: #d62828;
+    --gold: #f2c14e;
+    --gold-dark: #b8862b;
+    --paper: #fdf5e2;
+    --ink: #2b1a10;
+    --brush: "Ma Shan Zheng", "KaiTi", "STKaiti", "Kaiti SC", serif;
 }
 
 /* ---------- Page ---------- */
@@ -30,26 +21,112 @@
 body {
     margin: 0;
     min-height: 100vh;
-    padding: 24px 16px;
+    padding: 120px 16px 48px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 32px;
-    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-    color: var(--ink);
-    background: radial-gradient(circle at 50% 0%, var(--bg-top), var(--bg-bottom));
+    gap: 36px;
+    font-family: Georgia, "Times New Roman", serif;
+    color: var(--gold);
     text-align: center;
+    overflow-x: hidden;
+    /* Red silk with a faint gold coin pattern */
+    background:
+        radial-gradient(circle at 50% 50%, transparent 10px, rgba(242, 193, 78, 0.08) 11px, rgba(242, 193, 78, 0.08) 13px, transparent 14px) 0 0 / 56px 56px,
+        radial-gradient(ellipse at 50% 30%, var(--red-bright), var(--red) 45%, var(--red-deep));
+}
+
+/* Gold double frame around the whole page */
+html::before {
+    content: "";
+    position: fixed;
+    inset: 10px;
+    border: 3px double var(--gold);
+    outline: 1px solid var(--gold-dark);
+    outline-offset: 6px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Two hanging lanterns */
+body::before,
+body::after {
+    content: "🏮";
+    position: fixed;
+    top: 0;
+    font-size: clamp(56px, 10vw, 96px);
+    line-height: 1;
+    padding-top: 30px;
+    /* the "string" the lantern hangs from */
+    background: linear-gradient(var(--gold), var(--gold)) center top / 2px 34px no-repeat;
+    transform-origin: top center;
+    animation: swing 3s ease-in-out infinite alternate;
+    filter: drop-shadow(0 0 18px rgba(255, 170, 60, 0.7));
+    pointer-events: none;
+    z-index: 1;
+}
+
+body::before {
+    left: 8%;
+}
+
+body::after {
+    right: 8%;
+    animation-delay: -1.5s;
+}
+
+@keyframes swing {
+    from { transform: rotate(-6deg); }
+    to   { transform: rotate(6deg); }
+}
+
+body > * {
+    position: relative;
+    z-index: 2;
 }
 
 /* ---------- Title ---------- */
 h1 {
     margin: 0;
-    font-family: Georgia, "Times New Roman", serif;
     font-size: clamp(1.8rem, 6vw, 3.2rem);
-    letter-spacing: 0.04em;
-    color: var(--red);
-    text-shadow: 2px 2px 0 var(--gold);
+    letter-spacing: 0.08em;
+    color: var(--gold);
+    text-shadow: 0 2px 0 var(--red-deep), 0 0 20px rgba(242, 193, 78, 0.45);
+}
+
+/* 福 (fortune / good luck) on a round red medallion above the title */
+h1::before {
+    content: "福";
+    display: grid;
+    place-items: center;
+    width: 84px;
+    height: 84px;
+    margin: 0 auto 28px;
+    font-family: var(--brush);
+    font-size: 56px;
+    font-weight: normal;
+    letter-spacing: 0;
+    color: var(--gold);
+    text-shadow: none;
+    background: var(--red-bright);
+    border: 3px solid var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px var(--red-deep), 0 0 0 6px var(--gold-dark), 0 10px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Subtitle under the title: 幸运饼干 = "fortune cookie" */
+h1::after {
+    content: "幸 运 饼 干";
+    display: block;
+    margin-top: 10px;
+    font-family: var(--brush);
+    font-size: 0.55em;
+    font-weight: normal;
+    letter-spacing: 0.3em;
+    color: var(--paper);
+    opacity: 0.85;
+    text-shadow: none;
 }
 
 /* ---------- Button ---------- */
@@ -57,13 +134,13 @@ button {
     font: inherit;
     font-size: 1.25rem;
     font-weight: 700;
-    letter-spacing: 0.05em;
-    padding: 16px 40px;
-    border: none;
-    border-radius: 999px;
-    color: #fff;
-    background: linear-gradient(180deg, var(--red), var(--red-dark));
-    box-shadow: 0 6px 0 #6e1f17, 0 10px 20px var(--shadow);
+    letter-spacing: 0.08em;
+    padding: 14px 40px;
+    color: var(--red-deep);
+    background: linear-gradient(180deg, #ffe08a, var(--gold) 50%, var(--gold-dark));
+    border: 2px solid var(--red-deep);
+    border-radius: 10px;
+    box-shadow: 0 0 0 3px var(--gold), 0 6px 0 3px var(--gold-dark), 0 12px 24px rgba(0, 0, 0, 0.4);
     cursor: pointer;
     transition: transform 0.1s ease, box-shadow 0.1s ease, filter 0.2s ease;
 }
@@ -73,65 +150,73 @@ button::before {
 }
 
 button:hover {
-    filter: brightness(1.1);
+    filter: brightness(1.08);
     transform: translateY(-2px);
 }
 
 button:active {
     transform: translateY(4px);
-    box-shadow: 0 2px 0 #6e1f17, 0 4px 10px var(--shadow);
+    box-shadow: 0 0 0 3px var(--gold), 0 2px 0 3px var(--gold-dark), 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
 button:focus-visible {
-    outline: 3px solid var(--gold);
-    outline-offset: 4px;
+    outline: 3px solid var(--paper);
+    outline-offset: 6px;
 }
 
-/* ---------- Fortune slip ---------- */
+/* ---------- Fortune scroll ---------- */
 #output {
+    position: relative;
     margin: 0;
     width: min(560px, 100%);
-    padding: 28px 32px;
-    font-family: Georgia, "Times New Roman", serif;
+    padding: 32px 56px 32px 36px;
     font-size: 1.3rem;
     font-style: italic;
     line-height: 1.5;
     color: var(--ink);
-    background: var(--paper);
-    border-top: 3px dashed var(--red);
-    border-bottom: 3px dashed var(--red);
-    box-shadow: 0 12px 30px var(--shadow);
-    transform: rotate(-1.5deg);
-    animation: unfold 0.4s ease-out;
+    background:
+        linear-gradient(90deg, rgba(184, 134, 43, 0.15), transparent 8%, transparent 92%, rgba(184, 134, 43, 0.15)),
+        var(--paper);
+    /* dark wooden rods at the top and bottom of the scroll */
+    border-top: 12px solid #4a2c17;
+    border-bottom: 12px solid #4a2c17;
+    border-radius: 6px;
+    box-shadow: 0 0 0 2px var(--gold-dark), 0 16px 36px rgba(0, 0, 0, 0.45);
+    animation: unroll 0.5s ease-out;
 }
 
-#output::before,
+/* Red seal stamp in the corner: 吉 = "lucky" */
 #output::after {
-    color: var(--red);
-    font-size: 1.6rem;
+    content: "吉";
+    position: absolute;
+    right: 12px;
+    bottom: 10px;
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    font-family: var(--brush);
+    font-size: 28px;
     font-style: normal;
+    color: var(--paper);
+    background: var(--red);
+    border-radius: 4px;
+    transform: rotate(-8deg);
+    opacity: 0.9;
 }
 
-#output::before {
-    content: "“";
-}
-
-#output::after {
-    content: "”";
-}
-
-/* Hide the slip until a fortune has been written into it */
+/* Hide the scroll until a fortune has been written into it */
 #output:empty {
     display: none;
 }
 
-@keyframes unfold {
+@keyframes unroll {
     from {
         opacity: 0;
-        transform: rotate(-1.5deg) scaleY(0.2);
+        clip-path: inset(50% 0 50% 0);
     }
     to {
         opacity: 1;
-        transform: rotate(-1.5deg) scaleY(1);
+        clip-path: inset(0 0 0 0);
     }
 }
