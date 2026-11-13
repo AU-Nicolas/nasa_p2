@@ -1,0 +1,137 @@
+/* ---------- Colors ---------- */
+:root {
+    --bg-top: #fff4e0;
+    --bg-bottom: #f6d9a8;
+    --red: #c0392b;
+    --red-dark: #962d22;
+    --gold: #e0a526;
+    --paper: #fffdf7;
+    --ink: #3b2a1a;
+    --shadow: rgba(80, 40, 10, 0.25);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-top: #2a1a12;
+        --bg-bottom: #120a06;
+        --paper: #fbf3e2;
+        --shadow: rgba(0, 0, 0, 0.5);
+    }
+    h1 {
+        color: #f4c35a;
+    }
+}
+
+/* ---------- Page ---------- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    color: var(--ink);
+    background: radial-gradient(circle at 50% 0%, var(--bg-top), var(--bg-bottom));
+    text-align: center;
+}
+
+/* ---------- Title ---------- */
+h1 {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(1.8rem, 6vw, 3.2rem);
+    letter-spacing: 0.04em;
+    color: var(--red);
+    text-shadow: 2px 2px 0 var(--gold);
+}
+
+/* ---------- Button ---------- */
+button {
+    font: inherit;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 16px 40px;
+    border: none;
+    border-radius: 999px;
+    color: #fff;
+    background: linear-gradient(180deg, var(--red), var(--red-dark));
+    box-shadow: 0 6px 0 #6e1f17, 0 10px 20px var(--shadow);
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.1s ease, filter 0.2s ease;
+}
+
+button::before {
+    content: "🥠 ";
+}
+
+button:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #6e1f17, 0 4px 10px var(--shadow);
+}
+
+button:focus-visible {
+    outline: 3px solid var(--gold);
+    outline-offset: 4px;
+}
+
+/* ---------- Fortune slip ---------- */
+#output {
+    margin: 0;
+    width: min(560px, 100%);
+    padding: 28px 32px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.3rem;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--ink);
+    background: var(--paper);
+    border-top: 3px dashed var(--red);
+    border-bottom: 3px dashed var(--red);
+    box-shadow: 0 12px 30px var(--shadow);
+    transform: rotate(-1.5deg);
+    animation: unfold 0.4s ease-out;
+}
+
+#output::before,
+#output::after {
+    color: var(--red);
+    font-size: 1.6rem;
+    font-style: normal;
+}
+
+#output::before {
+    content: "“";
+}
+
+#output::after {
+    content: "”";
+}
+
+/* Hide the slip until a fortune has been written into it */
+#output:empty {
+    display: none;
+}
+
+@keyframes unfold {
+    from {
+        opacity: 0;
+        transform: rotate(-1.5deg) scaleY(0.2);
+    }
+    to {
+        opacity: 1;
+        transform: rotate(-1.5deg) scaleY(1);
+    }
+}
