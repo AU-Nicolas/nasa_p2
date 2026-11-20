@@ -41,3 +41,8 @@ CMD ["python", "improved.py"]
 
 # Tilbage til 3
 # kubectl scale statefulset bully --replicas=3
+
+# RUNNING load tests:
+# node Improved/loadtest.js
+# or with your own settings:
+# node Improved/loadtest.js --url http://localhost/ --requests 2000 --concurrency 1,10,50,100 --timeout 5000
