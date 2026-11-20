@@ -15,3 +15,19 @@ COPY web/src ./web
 ENV PYTHONUNBUFFERED=1
 
 CMD ["python", "improved.py"]
+
+
+# 1. Byg imaget med Python-koden og hjemmesiden
+# docker build -f Improved/dockerfile -t bully-node:improved .
+
+# 2. Start podsene, rettighederne og website-servicen
+# kubectl apply -f Improved/cluster.yaml -f Improved/website.yaml
+
+# 3. Vent til alle 3 pods er Running (Ctrl+C for at stoppe visningen)
+# kubectl get pods -w
+
+# Podden som hoster siden fås ved:
+# kubectl get pods -L role
+
+# For at stoppe siden:
+# kubectl delete -f Improved/cluster.yaml -f Improved/website.yaml
