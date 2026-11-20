@@ -1,0 +1,15 @@
+# Public entry point for the website. Only the elected leader serves it: the leader labels its own pod
+# role=leader (improved.py), and this selector matches that label. bully-service (cluster.yaml) stays headless for the election.
+# Docker Desktop exposes LoadBalancer services on the Mac: open http://localhost
+apiVersion: v1
+kind: Service
+metadata:
+  name: bully-website
+spec:
+  type: LoadBalancer
+  selector:
+    app: bully
+    role: leader
+  ports:
+    - port: 80          # Port on the Mac; 5000 is taken by the macOS AirPlay Receiver
+      targetPort: 5000  # Flask port in the pods

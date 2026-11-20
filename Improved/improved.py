@@ -8,7 +8,8 @@ import time
 from flask import Flask, jsonify, request
 
 
-app = Flask(__name__)
+# Serves the files in web/ (copied in by the dockerfile) at the site root, so main.html's ./main.css resolves
+app = Flask(__name__, static_folder="web", static_url_path="")
 
 SERVICE_NAME = "bully-service"
 PORT = 5000
@@ -105,10 +106,25 @@ def pass_on_election(peer_id):
     except requests.exceptions.RequestException:
         return False
         
+SA_DIR = "/var/run/secrets/kubernetes.io/serviceaccount"
+
+def set_leader_label(is_leader):
+    # The leader labels its own pod role=leader; bully-website (website.yaml) only sends traffic to that pod
+    token = open(f"{SA_DIR}/token").read()
+    namespace = open(f"{SA_DIR}/namespace").read()
+    requests.patch(
+        f"https://kubernetes.default.svc/api/v1/namespaces/{namespace}/pods/{POD_NAME}",
+        json={"metadata": {"labels": {"role": "leader" if is_leader else None}}},  # None removes the label
+        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/merge-patch+json"},
+        verify=f"{SA_DIR}/ca.crt",
+        timeout=2,
+    )
+
 def set_new_leader(new_leader_id):
-    global leader_id 
+    global leader_id
     leader_id = new_leader_id
-        
+    set_leader_label(new_leader_id == get_my_id())
+
 def declare_victory(new_leader_id):
     #send ud til alle at vinderen er kåret
     set_new_leader(new_leader_id)
@@ -156,6 +172,10 @@ def on_election():
 @app.get("/ready")
 def readiness_check():
     return "ok", 200
+
+@app.get("/")
+def home_page():
+    return app.send_static_file("main.html")
 
 
 

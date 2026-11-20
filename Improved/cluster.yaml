@@ -27,6 +27,7 @@ spec:
         app: bully
     spec:
       terminationGracePeriodSeconds: 1  # PID 1 ignores SIGTERM; without this a removed pod keeps answering for 30 s
+      serviceAccountName: bully  # Lets the leader label its own pod role=leader (see RBAC below)
       containers:
         - name: node
           image: bully-node:improved
@@ -38,3 +39,30 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+---
+# Identity for the bully pods, allowed to patch pods so the leader can set its own role=leader label
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: bully
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: bully-label-pods
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: bully-label-pods
+subjects:
+  - kind: ServiceAccount
+    name: bully
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: bully-label-pods

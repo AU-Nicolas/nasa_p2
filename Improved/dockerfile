@@ -1,12 +1,15 @@
-# Builds improved.py into an image; same as Original/dockerfile apart from the script
+# Builds improved.py and the web page into one image.
+# Build from the repo root so web/ is in the context:
+#   docker build -f Improved/dockerfile -t bully-node:improved .
 FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY requirements.txt .
+COPY Improved/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY improved.py .
+COPY Improved/improved.py .
+COPY web/src ./web
 
 # Unbuffered output ensures print statements show up immediately in kubectl logs
 ENV PYTHONUNBUFFERED=1
