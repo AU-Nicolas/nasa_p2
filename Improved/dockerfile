@@ -31,3 +31,13 @@ CMD ["python", "improved.py"]
 
 # For at stoppe siden:
 # kubectl delete -f Improved/cluster.yaml -f Improved/website.yaml
+
+# SCALING AF PODS:
+# Ned til 2 pods (bully-2 fjernes)
+# kubectl scale statefulset bully --replicas=2
+
+# Op til 5 pods (bully-3 og bully-4 tilføjes)
+# kubectl scale statefulset bully --replicas=5
+
+# Tilbage til 3
+# kubectl scale statefulset bully --replicas=3
