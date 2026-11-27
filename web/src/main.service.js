@@ -28,7 +28,6 @@ const fortunes = [
   "What ever you're goal is in life, embrace it visualize it, and for it will be yours.",
   "Your shoes will make you happy today.",
   "You cannot love life until you live the life you love.",
-  "Jeg boller din mor.",
   "Be on the lookout for coming events; They cast their shadows beforehand.",
   "Land is always on the mind of a flying bird.",
   "The man or woman you desire feels the same about you.",
